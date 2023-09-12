@@ -12,16 +12,18 @@ bot = telebot.TeleBot(token)
 def start_message(message):
     bot.send_message(message.chat.id, 'hello there')
     print('ALERT')
+@bot.message_handler(commands=['button'])
+def button_message(message):
+    markup=types.ReplyKeyboardMarkup(resize_keyboard=True)
+    item1=types.KeyboardButton("Кнопка")
+    markup.add(item1)
+    bot.send_message(message.chat.id,'Выберите что вам надо',reply_markup=markup)
+@bot.message_handler(content_types='text')
+def message_reply(message):
+    if message.text=="Кнопка":
+        data = message.text
+        bot.send_message(message.chat.id, int(data[1])-int(data[2]))    
 
-@bot.message_handler(commands=['sum'])
-def ret_sum(message):
-    data = message.text
-    if len(data) > 6:
-        data = data.split(' ')
-        ret = int(data[1]) + int(data[2])
-        bot.send_message(message.chat.id, str(ret))
-    else:
-        bot.send_message(message.chat.id, 'BAD USER')
 
 @bot.message_handler(commands=['dif'])
 def ret_sum(message):
