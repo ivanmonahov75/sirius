@@ -13,6 +13,27 @@ def start_message(message):
     bot.send_message(message.chat.id, 'hello there')
     print('ALERT')
 
+@bot.message_handler(commands=['sum'])
+def ret_sum(message):
+    data = message.text
+    if len(data) > 6:
+        data = data.split(' ')
+        ret = int(data[1]) + int(data[2])
+        bot.send_message(message.chat.id, str(ret))
+    else:
+        bot.send_message(message.chat.id, 'BAD USER')
+
+@bot.message_handler(commands=['dif'])
+def ret_sum(message):
+    data = message.text
+    if len(data) > 6:
+        data = data.split(' ')
+        ret = int(data[1]) - int(data[2])
+        bot.send_message(message.chat.id, str(ret))
+    else:
+        bot.send_message(message.chat.id, 'BAD USER')
+
+
 # I don't understand it completely, but bot will reply to anything with same text
 @bot.message_handler(func=lambda message: True)
 def irritate(message):
