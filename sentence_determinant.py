@@ -1,6 +1,6 @@
 from sentence_transformers import SentenceTransformer, util
 
-from app.models.faq import FAQ
+from faq import FAQ
 
 
 class SentenceDeterminant:
