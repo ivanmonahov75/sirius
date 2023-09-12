@@ -10,7 +10,7 @@ bot = telebot.TeleBot(token)
 # here is example, where bot will reply to comand 'start' to the chat, from where he was texted fraze
 @bot.message_handler(commands=['start'])
 def start_message(message):
-    bot.send_message(message.chat.id, 'hello there')
+    bot.send_message(message.chat.id, 'Hello my dear friend. I am really smart bot and if you write me something inappropriate, i would kill you:)')
     print('ALERT')
 
 @bot.message_handler(commands=['sum'])
