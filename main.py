@@ -17,11 +17,11 @@ def log_new(username, chat_id):
 
 
 def log_mess(username, chat_id, mess, reply):
-    return log('message', f'username: {username}, chatID: {chat_id}, message: {mess}, reply: {reply}')
+    return log('message', f'username: {username}, chatID: {chat_id}, message: "{mess}", reply: "{reply}"')
 
 
 def log_command(username, chat_id, mess, reply):
-    return log('command', f'username: {username}, chatID: {chat_id}, message: {mess}, reply: {reply}')
+    return log('command', f'username: {username}, chatID: {chat_id}, message: "{mess}", reply: "{reply}"')
 
 
 # our bots token:
@@ -41,7 +41,9 @@ def start_message(message):
 
 @bot.message_handler(commands=['time'])
 def ret_sum(message):
-    bot.send_message(message.chat.id, datetime.datetime.now())
+    date = f'Current time is {datetime.datetime.now()}'
+    bot.send_message(message.chat.id, date)
+    print(log_command(message.from_user.username, message.chat.id, message.text, date))
 
 
 # I don't understand it completely, but bot will reply to anything with same text
@@ -53,7 +55,7 @@ def irritate(message):
         bot.reply_to(message, func())
     else:
         bot.reply_to(message, reply)
-    log_mess(message.from_user.username, message.chat.id, message.text, reply)
+    print(log_mess(message.from_user.username, message.chat.id, message.text, reply))
 
 
 bot.infinity_polling()
