@@ -4,7 +4,7 @@ from sentence_determinant import SentenceDeterminant
 import datetime
 from faq import current_time
 
-
+# for test
 def log(_type, mess):  # basal log function
     logg = open('logs/all.log', 'a')
     logg.write(f'{datetime.datetime.now()}, {_type}, {mess}\n')
