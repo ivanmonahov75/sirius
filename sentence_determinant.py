@@ -24,6 +24,6 @@ class SentenceDeterminant:
         for i in range(0, len(cos_sim)):
             sentence_combinations.append([i, cos_sim[i]])
         sentence_combinations = sorted(sentence_combinations, key=lambda x: x[1], reverse=True)
-        if sentence_combinations[0][1] < 0.6:
-            return 'я не могу ответить правильно'
+        if sentence_combinations[0][1] < 0.8:
+            return 'я не могу ответить правильно, our moderator @poezdgaven'
         return ANSWERS[QUESTIONS[SentenceDeterminant.questions[sorted(sentence_combinations, key=lambda x: x[1], reverse=True)[0][0]]]]
