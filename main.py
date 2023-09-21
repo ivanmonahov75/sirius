@@ -37,11 +37,13 @@ def ret_sum(message):
 # I don't understand it completely, but bot will reply to anything with same text
 @bot.message_handler(func=lambda message: True)
 def irritate(message):
-    if (sen_det.get_closest_question(message.text) is current_time):
+       if (sen_det.get_closest_question(message.text) is current_time):
         func = sen_det.get_closest_question(message.text)
         bot.reply_to(message, func())
     else:
-        bot.reply_to(message, sen_det.get_closest_question(message.text))
-
-
+        answer =sen_det.get_closest_question(message.text)
+        if answer == None:
+            answer = 'Я не знаю ответа на Ваш вопрос. Пожалуйста, дождитесь оператора'
+            bot.send_message(get_env_var('OPERATOR'), f'сообщение от пользователя {message.from_user.username}: {message.text}')
+        bot.reply_to(message, answer)
 bot.infinity_polling()
