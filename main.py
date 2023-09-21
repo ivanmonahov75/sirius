@@ -1,14 +1,34 @@
 # our bot's ID silver_rare_fish_bot
 import telebot
+import os
+from dotenv import load_dotenv
 from sentence_determinant import SentenceDeterminant
 import datetime
 from faq import current_time
 
 
-def log():
-    logg = open('all.log', 'a')
-    logg.write('\n')
+def gen_env_var(var_name):
+    load_dotenv()
+    return os.getenv(var_name)
+
+
+def log(_type, mess):  # basal log function
+    logg = open('logs/all.log', 'a')
+    logg.write(f'{datetime.datetime.now()}, {_type}, {mess}\n')
     logg.close()
+    return f'{datetime.datetime.now()}, {_type}, {mess}\n'
+
+
+def log_new(username, chat_id):
+    return log('new user', f'username: {username}, chatID: {chat_id}')
+
+
+def log_mess(username, chat_id, mess, reply):
+    return log('message', f'username: {username}, chatID: {chat_id}, message: "{mess}", reply: "{reply}"')
+
+
+def log_command(username, chat_id, mess, reply):
+    return log('command', f'username: {username}, chatID: {chat_id}, message: "{mess}", reply: "{reply}"')
 
 
 # our bots token:
@@ -22,28 +42,28 @@ sen_det = SentenceDeterminant()
 # here is example, where bot will reply to comand 'start' to the chat, from where he was texted fraze
 @bot.message_handler(commands=['start'])
 def start_message(message):
-    log = open('logs/all.log', 'a')
-
     bot.send_message(message.chat.id, 'hello there')
-    log.write(f'new user, chat id = {message.chat.id}\n')
-    log.close()
+    print(log_new(message.from_user.username, message.chat.id))
 
 
 @bot.message_handler(commands=['time'])
 def ret_sum(message):
-    bot.send_message(message.chat.id, datetime.datetime.now())
+    date = f'Current time is {datetime.datetime.now()}'
+    bot.send_message(message.chat.id, date)
+    print(log_command(message.from_user.username, message.chat.id, message.text, date))
 
 
 # I don't understand it completely, but bot will reply to anything with same text
 @bot.message_handler(func=lambda message: True)
 def irritate(message):
-       if (sen_det.get_closest_question(message.text) is current_time):
-        func = sen_det.get_closest_question(message.text)
-        bot.reply_to(message, func())
+    reply = sen_det.get_closest_question(message.text)
+
+    if reply is None:
+        reply = "Я не знаю ответ на вопрос, дождитесь ответа оператора"
+        bot.send_message(gen_env_var('OPERATOR'), f'Message from user @{message.from_user.username}: {message.text}')
+    if reply is current_time:
+        bot.reply_to(message, current_time())
     else:
-        answer =sen_det.get_closest_question(message.text)
-        if answer == None:
-            answer = 'Я не знаю ответа на Ваш вопрос. Пожалуйста, дождитесь оператора'
-            bot.send_message(get_env_var('OPERATOR'), f'сообщение от пользователя {message.from_user.username}: {message.text}')
-        bot.reply_to(message, answer)
+        bot.reply_to(message, reply)
+    print(log_mess(message.from_user.username, message.chat.id, message.text, reply))
 bot.infinity_polling()
