@@ -1,10 +1,17 @@
 # our bot's ID silver_rare_fish_bot
 import telebot
+import os
+from dotenv import load_dotenv
 from sentence_determinant import SentenceDeterminant
 import datetime
 from faq import current_time
-# tyest
-# for test
+
+
+def gen_env_var(var_name):
+    load_dotenv()
+    return os.getenv(var_name)
+
+
 def log(_type, mess):  # basal log function
     logg = open('logs/all.log', 'a')
     logg.write(f'{datetime.datetime.now()}, {_type}, {mess}\n')
@@ -50,9 +57,12 @@ def ret_sum(message):
 @bot.message_handler(func=lambda message: True)
 def irritate(message):
     reply = sen_det.get_closest_question(message.text)
+
+    if reply is None:
+        reply = "Я не знаю ответ на вопрос, дождитесь ответа оператора"
+        bot.send_message(gen_env_var('OPERATOR'), f'Message from user @{message.from_user.username}: {message.text}')
     if reply is current_time:
-        func = reply
-        bot.reply_to(message, func())
+        bot.reply_to(message, current_time())
     else:
         bot.reply_to(message, reply)
     print(log_mess(message.from_user.username, message.chat.id, message.text, reply))
