@@ -32,17 +32,18 @@ def log_command(username, chat_id, mess, reply):
 
 
 # our bots token:
-token = '6054282792:AAG3MKRoB_31Nn39kMBQHhIGHbaEdGo_FJg'
+token = gen_env_var('TOKEN')
 
 # initialize
 bot = telebot.TeleBot(token)
 sen_det = SentenceDeterminant()
 
 
-# here is example, where bot will reply to comand 'start' to the chat, from where he was texted fraze
+# here is example, where bot will reply to command 'start' to the chat, from where he was texted fraze
 @bot.message_handler(commands=['start'])
 def start_message(message):
     bot.send_message(message.chat.id, 'hello there')
+    bot.send_message(gen_env_var('OPERATOR'), f'WARNING\n@{message.from_user.username} started talking to bot at {datetime.datetime.now()}')
     print(log_new(message.from_user.username, message.chat.id))
 
 
@@ -60,7 +61,7 @@ def irritate(message):
 
     if reply is None:
         reply = "Я не знаю ответ на вопрос, дождитесь ответа оператора"
-        bot.send_message(gen_env_var('OPERATOR'), f'Message from user @{message.from_user.username}: {message.text}')
+        bot.send_message(gen_env_var('OPERATOR'), f'WARNING\nMessage from user @{message.from_user.username}: {message.text}')
     if reply is current_time:
         bot.reply_to(message, current_time())
     else:
