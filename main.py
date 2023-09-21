@@ -66,6 +66,4 @@ def irritate(message):
     else:
         bot.reply_to(message, reply)
     print(log_mess(message.from_user.username, message.chat.id, message.text, reply))
-
-
 bot.infinity_polling()
